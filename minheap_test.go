@@ -1,15 +1,10 @@
 package minheap
 
 import (
-	. "launchpad.net/gocheck"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
-
-func Test(t *testing.T) { TestingT(t) }
-
-type MinHeapSuite struct{}
-
-var _ = Suite(&MinHeapSuite{})
 
 func toEl(i int) interface{} {
 	return &i
@@ -19,7 +14,7 @@ func fromEl(i interface{}) int {
 	return *(i.(*int))
 }
 
-func (s *MinHeapSuite) TestPeek(c *C) {
+func TestPeek(t *testing.T) {
 	mh := NewMinHeap()
 
 	el := &Element{
@@ -28,30 +23,30 @@ func (s *MinHeapSuite) TestPeek(c *C) {
 	}
 
 	mh.PushEl(el)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 1)
-	c.Assert(mh.Len(), Equals, 1)
+	assert.Equal(t, 1, fromEl(mh.PeekEl().Value))
+	assert.Equal(t, 1, mh.Len())
 
 	el = &Element{
 		Value:    toEl(2),
 		Priority: 1,
 	}
 	mh.PushEl(el)
-	c.Assert(mh.Len(), Equals, 2)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 2)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 2)
-	c.Assert(mh.Len(), Equals, 2)
+	assert.Equal(t, 2, mh.Len())
+	assert.Equal(t, 2, fromEl(mh.PeekEl().Value))
+	assert.Equal(t, 2, fromEl(mh.PeekEl().Value))
+	assert.Equal(t, 2, mh.Len())
 
 	el = mh.PopEl()
 
-	c.Assert(fromEl(el.Value), Equals, 2)
-	c.Assert(mh.Len(), Equals, 1)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 1)
+	assert.Equal(t, 2, fromEl(el.Value))
+	assert.Equal(t, 1, mh.Len())
+	assert.Equal(t, 1, fromEl(mh.PeekEl().Value))
 
 	mh.PopEl()
-	c.Assert(mh.Len(), Equals, 0)
+	assert.Equal(t, 0, mh.Len())
 }
 
-func (s *MinHeapSuite) TestUpdate(c *C) {
+func TestUpdate(t *testing.T) {
 	mh := NewMinHeap()
 	x := &Element{
 		Value:    toEl(1),
@@ -68,11 +63,11 @@ func (s *MinHeapSuite) TestUpdate(c *C) {
 	mh.PushEl(x)
 	mh.PushEl(y)
 	mh.PushEl(z)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 2)
+	assert.Equal(t, 2, fromEl(mh.PeekEl().Value))
 
 	mh.UpdateEl(z, 1)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 3)
+	assert.Equal(t, 3, fromEl(mh.PeekEl().Value))
 
 	mh.UpdateEl(x, 0)
-	c.Assert(fromEl(mh.PeekEl().Value), Equals, 1)
+	assert.Equal(t, 1, fromEl(mh.PeekEl().Value))
 }
